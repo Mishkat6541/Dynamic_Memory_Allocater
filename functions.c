@@ -95,7 +95,7 @@ int allocator( struct space *nem, int size , struct node **head){
     if (p >= 0){
         addNode(head, p);
     }
-
+    return p
 }
 
 
