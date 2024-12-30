@@ -19,7 +19,7 @@ void initialize(struct space *mem){
 
 
     for (int i = 0; i < BATCH; i++) {
-        mem->memory[i] = 'F'; 
+        mem->memory[i] = 'FREE'; 
     }
 
     
@@ -45,14 +45,14 @@ int scanMemory(struct space *mem, int size) {
     int i = 0;   
 
     while (p < 0 && i < mem->len) {
-        while (i < mem->len && mem->memory[i] != 'F') {
+        while (i < mem->len && mem->memory[i] != 'FREE') {
             i++;
         }
 
         if (i < mem->len) {  
             int t = 0; 
 
-            while (t < size && (i + t) < mem->len && mem->memory[i + t] == 'F') {
+            while (t < size && (i + t) < mem->len && mem->memory[i + t] == 'FREE') {
                 t++;
             }
 
@@ -66,14 +66,6 @@ int scanMemory(struct space *mem, int size) {
 
     return p;
 }
-
-
-3. and the definition of allocator, a function that
-• takes three inputs, a pointer to struct space, struct space *mem, an integer, size, and a
-pointer to the head of the nodes list, struct node **head,
-• calls scanMemory with arguments mem and size,
-• sets an integer, p, to its return value, and
-• if p is nonnegative, calls addNode with inputs head and p.
 
 
 void addNode(struct node **head, int p) {
@@ -106,3 +98,126 @@ int allocator( struct space *nem, int size , struct node **head){
 
 }
 
+void removeNode( struct node **head, int p){
+
+    while(*head.next != null)
+    {
+        if (*head->p == p)
+        {
+            free(*head);
+            break;
+        }
+
+        *head = *head->next;
+    }
+
+}
+
+void removeNode(struct node **head, int p) {
+    if (*head == NULL) {
+        return;
+    }
+
+    struct node *current = *head;
+    struct node *prev = NULL;
+
+    if (current != NULL && current->p == p) {
+        *head = current->next;  
+        free(current);
+        return;
+    }
+
+    while (current != NULL && current->p != p) {
+        prev = current;
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        return; 
+    }
+
+    prev->next = current->next;
+    free(current); 
+}
+
+void deallocator( struct space *nem, int p , struct node **head){
+
+    *nem[p] = 'FREE';
+
+    removeNode(**head, p);
+}
+
+void deallocator(struct space *mem, int p, struct node **head) {
+    if (mem == NULL || head == NULL) {
+        return;  
+    }
+
+    for (int i = p; i < mem->len && mem->memory[i] != '\0'; i++) {
+        mem->memory[i] = 'FREE'; 
+    }
+
+    printf("memory=%s(%d)\n", mem->memory, mem->len);
+
+    removeNode(head, p);
+}
+
+
+void addMemory(struct space *mem){
+
+    char *new = malloc( 1 * (BATCH+1) );
+    int i =0;
+
+    new = mem;
+    while(mem->memory[i] != "FREE"){
+        new[i] = mem->memory[i]
+    }
+
+    int temp = i
+    for (int i = 0; i < BATCH; i++) {
+       new[i+temp] = 'FREE'; 
+    }
+
+    new[i+]
+    
+    
+
+    printf("memory=%s(%d)\n", mem->memory, mem->len);
+
+
+}
+
+void addMemory(struct space *mem) {
+
+    char *new = (char *)malloc((mem->len + BATCH + 1) * sizeof(char));
+
+    for (int i = 0; i < mem->len; i++) {
+        new[i] = mem->memory[i];
+    }
+
+    for (int i = mem->len; i < mem->len + BATCH; i++) {
+        new[i] = 'FREE';
+    }
+
+    new[mem->len + BATCH] = '\0';
+
+    free(mem->memory);
+
+    mem->memory = new;
+    mem->len = mem->len + BATCH;
+
+    printf("memory=%s(%d)\n", mem->memory, mem->len);
+}
+
+
+int allocatorNew(struct space *mem, int size, struct node **head) {
+    int p;
+    while ((p = scanMemory(mem, size)) == -1) {
+        addMemory(mem); 
+    }
+
+    if (p >= 0) {
+        addNode(head, p);
+    }
+
+    return p; 
+}
