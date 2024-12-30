@@ -4,28 +4,30 @@
 #define BATCH 10
 
 struct space { 
-    char memory; 
+    char *memory; 
     int len; 
 }; 
 
 struct node { 
     int p; 
-    struct nodenext; 
+    struct node *next; 
 };
 
-void initialize(struct space mem){
-    mem->memory = malloc( 1 (BATCH+1) );
+void initialize(struct space *mem){
+    mem->memory = malloc( 1 * (BATCH+1) );
     mem->len = BATCH;
 
 
     for (int i = 0; i < BATCH; i++) {
-        mem->memory[i] = 'FREE'; 
+        mem->memory[i] = 'F'; 
     }
 
-    free(mem->memory);
+    
     mem->memory[BATCH] = '\0';
 
     printf("memory=%s(%d)\n", mem->memory, mem->len);
+
+    free(mem->memory);
 }
 
 void clear(struct space *mem) {
