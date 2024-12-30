@@ -19,7 +19,7 @@ void initialize(struct space *mem){
 
 
     for (int i = 0; i < BATCH; i++) {
-        mem->memory[i] = 'FREE'; 
+        mem->memory[i] = 'F'; 
     }
 
     
@@ -45,14 +45,14 @@ int scanMemory(struct space *mem, int size) {
     int i = 0;   
 
     while (p < 0 && i < mem->len) {
-        while (i < mem->len && mem->memory[i] != 'FREE') {
+        while (i < mem->len && mem->memory[i] != 'F') {
             i++;
         }
 
         if (i < mem->len) {  
             int t = 0; 
 
-            while (t < size && (i + t) < mem->len && mem->memory[i + t] == 'FREE') {
+            while (t < size && (i + t) < mem->len && mem->memory[i + t] == 'F') {
                 t++;
             }
 
@@ -98,20 +98,6 @@ int allocator( struct space *nem, int size , struct node **head){
 
 }
 
-void removeNode( struct node **head, int p){
-
-    while(*head.next != null)
-    {
-        if (*head->p == p)
-        {
-            free(*head);
-            break;
-        }
-
-        *head = *head->next;
-    }
-
-}
 
 void removeNode(struct node **head, int p) {
     if (*head == NULL) {
@@ -140,12 +126,6 @@ void removeNode(struct node **head, int p) {
     free(current); 
 }
 
-void deallocator( struct space *nem, int p , struct node **head){
-
-    *nem[p] = 'FREE';
-
-    removeNode(**head, p);
-}
 
 void deallocator(struct space *mem, int p, struct node **head) {
     if (mem == NULL || head == NULL) {
@@ -153,7 +133,7 @@ void deallocator(struct space *mem, int p, struct node **head) {
     }
 
     for (int i = p; i < mem->len && mem->memory[i] != '\0'; i++) {
-        mem->memory[i] = 'FREE'; 
+        mem->memory[i] = 'F'; 
     }
 
     printf("memory=%s(%d)\n", mem->memory, mem->len);
@@ -162,29 +142,6 @@ void deallocator(struct space *mem, int p, struct node **head) {
 }
 
 
-void addMemory(struct space *mem){
-
-    char *new = malloc( 1 * (BATCH+1) );
-    int i =0;
-
-    new = mem;
-    while(mem->memory[i] != "FREE"){
-        new[i] = mem->memory[i]
-    }
-
-    int temp = i
-    for (int i = 0; i < BATCH; i++) {
-       new[i+temp] = 'FREE'; 
-    }
-
-    new[i+]
-    
-    
-
-    printf("memory=%s(%d)\n", mem->memory, mem->len);
-
-
-}
 
 void addMemory(struct space *mem) {
 
@@ -195,7 +152,7 @@ void addMemory(struct space *mem) {
     }
 
     for (int i = mem->len; i < mem->len + BATCH; i++) {
-        new[i] = 'FREE';
+        new[i] = 'F';
     }
 
     new[mem->len + BATCH] = '\0';
